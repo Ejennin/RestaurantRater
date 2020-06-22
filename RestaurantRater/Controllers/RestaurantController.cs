@@ -9,11 +9,33 @@ namespace RestaurantRater.Controllers
 {
     public class RestaurantController : Controller
     {
-        private RestaurantDBContext _db = new RestaurantDBContext();
+        private RestaurantDbContext _db = new RestaurantDbContext();
+
         // GET: Restaurant
         public ActionResult Index()
         {
             return View(_db.Restaurants.ToList());
+        }
+
+        // Get: REstaurant/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        //Post : Rerstaurant/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Restaurant restaurant)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Restaurants.Add(restaurant);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(restaurant);
         }
     }
 }
